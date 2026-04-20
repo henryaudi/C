@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build bigger program",
+      "type": "shell",
+      "command": "gcc",
+      "args": [
+        "src/main.c",
+        "src/other.c",
+        "-I",
+        "includes",
+        "-o",
+        "program"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}
