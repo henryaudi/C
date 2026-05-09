@@ -25,9 +25,45 @@ public:
 	int getLength() { return this->length; }
 	void append(int value);
 	void deleteLast();
-
+	void prepend(int value);
+	void deleteFirst();
 	~LinkedList();
 };
+
+void LinkedList::deleteFirst()
+{
+	if (length == 0) return;
+
+	Node *temp = head;
+
+	if (length == 1)
+	{
+		this->head = nullptr;
+		this->tail = nullptr;
+	}
+	else
+	{
+		head = head->next;
+	}
+	delete temp;
+	this->length--;
+}
+
+void LinkedList::prepend(int value)
+{
+	Node *newNode = new Node(value);
+	if (this->length == 0)
+	{
+		head = newNode;
+		tail = newNode;
+	}
+	else
+	{
+		newNode->next = head;
+		head = newNode;
+	}
+	this->length++;
+}
 
 void LinkedList::deleteLast()
 {
