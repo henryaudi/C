@@ -6,7 +6,14 @@ public:
 	int value;
 	Node *next;
 	Node(int value) : value(value), next(nullptr) {}
+	friend std::ostream &operator<<(std::ostream &os, const Node &node);
 };
+
+std::ostream &operator<<(std::ostream &os, const Node &node)
+{
+	os << node.value;
+	return os;
+}
 
 class LinkedList
 {
@@ -27,12 +34,109 @@ public:
 	void deleteLast();
 	void prepend(int value);
 	void deleteFirst();
+	Node *get(int index);
+	bool set(int index, int value);
+	bool insert(int index, int value);
+	void deleteNode(int index);
+	void reverse();
 	~LinkedList();
 };
 
+void LinkedList::reverse()
+{
+	Node *temp = this->head;
+	this->head = this->tail;
+	this->tail = temp;
+
+	Node *after = temp->next;
+	Node *before = nullptr;
+
+	for (int i = 0; i < this->length; i++)
+	{
+		after = temp->next;
+		temp->next = before;
+		before = temp;
+		temp = after;
+	}
+}
+
+void LinkedList::deleteNode(int index)
+{
+	if (index < 0 || index >= this->length)
+	{
+		return;
+	}
+
+	if (index == 0)
+	{
+		return this->deleteFirst();
+	}
+	if (index == this->length - 1)
+	{
+		return this->deleteLast();
+	}
+
+	Node *prev = this->get(index - 1);
+	Node *temp = prev->next;
+	prev->next = temp->next;
+	delete temp;
+	this->length--;
+}
+
+bool LinkedList::insert(int index, int value)
+{
+	if (index < 0 || index > this->length)
+	{
+		return false;
+	}
+	if (index == 0)
+	{
+		this->prepend(value);
+		return true;
+	}
+	if (index == this->length)
+	{
+		this->append(value);
+		return true;
+	}
+
+	Node *newNode = new Node(value);
+	Node *temp = this->get(index - 1);
+	newNode->next = temp->next;
+	temp->next = newNode;
+	this->length++;
+	return true;
+}
+
+bool LinkedList::set(int index, int value)
+{
+	Node *temp = this->get(index);
+	if (!temp)
+		return false;
+	temp->value = value;
+	return true;
+}
+
+Node *LinkedList::get(int index)
+{
+	if (index < 0 || index >= this->length)
+	{
+		return nullptr;
+	}
+
+	Node *temp = this->head;
+	for (int i = 0; i < index; i++)
+	{
+		temp = temp->next;
+	}
+
+	return temp;
+}
+
 void LinkedList::deleteFirst()
 {
-	if (length == 0) return;
+	if (length == 0)
+		return;
 
 	Node *temp = head;
 
@@ -134,10 +238,13 @@ LinkedList::~LinkedList()
 int main(int argc, char const *argv[])
 {
 	LinkedList *myLinkedList = new LinkedList(10);
-	myLinkedList->printList();
-	std::cout << "Head: " << myLinkedList->getHead()->value << std::endl;
-	std::cout << "Tail: " << myLinkedList->getTail()->value << std::endl;
-	std::cout << "Length: " << myLinkedList->getLength() << std::endl;
+	myLinkedList->append(5);
+	myLinkedList->append(16);
+
+	std::cout << "Node at index 1: " << *(myLinkedList->get(1)) << std::endl;
+
+	myLinkedList->set(1, 6);
+	std::cout << "Node at index 1 after set: " << *(myLinkedList->get(1)) << std::endl;
 
 	delete myLinkedList;
 	return 0;
