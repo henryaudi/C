@@ -4,3 +4,6 @@ ColumnLimit: 0
 
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
+
+AccessModifierOffset: -4
+IndentAccessModifiers: false
